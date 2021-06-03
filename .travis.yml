@@ -1,0 +1,84 @@
+--- 
+language: cpp
+
+sudo: true
+
+env: 
+  global: 
+    - PRETTYNAME="Fracktal Works Julia 2018 Marlin"
+    - ROOT="${TRAVIS_BUILD_DIR}"
+
+git: 
+  submodules: false
+
+branches: 
+  only:
+    - 1.1.9
+
+before_install: 
+# - openssl enc -nosalt -aes-256-cbc -d -in ${TRAVIS_BUILD_DIR}/scripts/.dropbox_uploader.enc -out ~/.dropbox_uploader -base64 -K ${ENC_KEY} -iv ${ENC_IV}
+  - export TZ='Asia/Kolkata'
+  - date
+  - chmod +x ${TRAVIS_BUILD_DIR}/scripts/*
+  - export PATH=${TRAVIS_BUILD_DIR}/scripts/:${PATH}
+  - sleep 3
+  - export DISPLAY=:1.0
+  - wget --quiet https://downloads.arduino.cc/arduino-1.8.5-linux64.tar.xz
+  - tar xf arduino-1.8.5-linux64.tar.xz
+  - mv arduino-1.8.5 $HOME/arduino_ide
+  - export PATH="$HOME/arduino_ide:$PATH"
+
+install:
+  # Install: LiquidCrystal_I2C library
+  - git clone https://github.com/kiyoshigawa/LiquidCrystal_I2C.git
+  - mv LiquidCrystal_I2C/LiquidCrystal_I2C $HOME/arduino_ide/libraries/LiquidCrystal_I2C
+  #
+  # Install: LiquidTWI2 library
+  - git clone https://github.com/lincomatic/LiquidTWI2.git
+  - sudo mv LiquidTWI2 $HOME/arduino_ide/libraries/LiquidTWI2
+  #
+  # Install: Monochrome Graphics Library for LCDs and OLEDs
+  - git clone https://github.com/olikraus/U8glib_Arduino.git
+  - sudo mv U8glib_Arduino $HOME/arduino_ide/libraries/U8glib_Arduino
+  #
+  # Install: L6470 Stepper Motor Driver library
+  # - git clone https://github.com/ameyer/Arduino-L6470.git
+  # - sudo mv Arduino-L6470/L6470 $HOME/arduino_ide/libraries/L6470
+  #
+  # Install: TMC26X Stepper Motor Controller library
+  # - git clone https://github.com/trinamic/TMC26XStepper.git
+  # - sudo mv TMC26XStepper $HOME/arduino_ide/libraries/TMC26XStepper
+  #
+  # Install: TMC2130 Stepper Motor Controller library
+  - git clone https://github.com/teemuatlut/TMC2130Stepper.git
+  - sudo mv TMC2130Stepper $HOME/arduino_ide/libraries/TMC2130Stepper
+  #
+  # Install: TMC2208 Stepper Motor Controller library
+  - git clone https://github.com/teemuatlut/TMC2208Stepper.git
+  - sudo mv TMC2208Stepper $HOME/arduino_ide/libraries/TMC2208Stepper
+  #
+  # Install: Adafruit Neopixel library
+  - git clone https://github.com/adafruit/Adafruit_NeoPixel.git
+  - sudo mv Adafruit_NeoPixel $HOME/arduino_ide/libraries/Adafruit_NeoPixel
+
+# before_script: 
+#   - "cd ${TRAVIS_BUILD_DIR}"
+#   - "sed -i 's/git@github.com:/git:\\/\\/github.com\\//' .gitmodules"
+#   - "git submodule update --init --recursive"
+
+script: 
+  - probuild
+
+notifications: 
+  slack: 
+    rooms:
+      - fracktal-works:vq5knl5oZQ21gwsvcSRMK8j2#julia2018marlin
+    on_failure: always
+    on_success: always
+    template:
+      - "*<https://github.com/%{repository_slug}/|%{repository_slug}>* _@<https://github.com/%{repository_slug}/tree/%{branch}|%{branch}>_"
+      - "  Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) by _<https://github.com/%{author}/|%{author}>_ *%{result}* in _%{duration}_"
+      - "  _\"%{commit_subject}\"_ "
+  email: 
+    on_failure: change
+    on_success: change

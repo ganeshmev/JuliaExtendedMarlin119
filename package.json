@@ -1,0 +1,28 @@
+{
+  "name": "fwj18m",
+  "version": "1.0.0",
+  "description": "Build automation for Fracktal Works Julia 2018 Marlin",
+  "main": "index.js",
+  "scripts": {
+    "start": "./scripts/reversion -- $1 && node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aharshac/Julia2018Marlin118.git"
+  },
+  "author": "Harsha Alva",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aharshac/Julia2018Marlin118/issues"
+  },
+  "homepage": "https://github.com/aharshac/Julia2018Marlin118#readme",
+  "dependencies": {
+    "chalk": "^2.4.1",
+    "chokidar": "^2.0.4",
+    "fs-extra": "^6.0.1",
+    "moment": "^2.22.2",
+    "readline-sync": "^1.4.9",
+    "rimraf": "^2.6.2"
+  }
+}

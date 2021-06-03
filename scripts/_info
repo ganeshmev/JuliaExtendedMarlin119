@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# _info <dir> <distdate>
+
+if [[ -z "$1" || -z "$2" ]];	then
+	echo "_info: Parameter Error"
+	exit 1
+fi
+
+echo "Writing info.json"
+
+cat > "$1/info.json" <<EOF
+{
+	"version": "$2"
+}
+EOF

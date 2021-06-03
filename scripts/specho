@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# specho
+bold=$(tput bold)              # Bold
+red=${bold}$(tput setaf 1)     # red
+green=${bold}$(tput setaf 2)   # green
+yellow=${bold}$(tput setaf 3)  # yellow
+blue=${bold}$(tput setaf 4)    # blue
+white=${bold}$(tput setaf 7)   # white
+reset=$(tput sgr0)             # Reset
+if [ -z "$1" ] || [ -z "$2" ];	then
+	exit 1
+fi
+
+if [ $1 -eq 0 ]; then
+ echo "${white}${2}${reset}"
+elif [ $1 -eq 1 ]; then
+ echo "${red}${2}${reset}"
+elif [ $1 -eq 2 ]; then
+ echo "${green}${2}${reset}"
+elif [ $1 -eq 3 ]; then
+ echo "${yellow}${2}${reset}"
+elif [ $1 -eq 4 ]; then
+ echo "${blue}${2}${reset}"
+else
+	exit 1
+fi
+
+exit 0

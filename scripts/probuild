@@ -1,0 +1,124 @@
+#!/usr/bin/env bash
+
+PROJECT_NAME="Marlin"
+
+. constants
+
+# static paths
+SRC="${TRAVIS_BUILD_DIR}/src"
+SRC_MARLIN="${SRC}/Marlin"
+SRC_MARLIN_INO="${SRC_MARLIN}/Marlin.ino"
+# SRC_COMMON="${SRC}/common"
+# STAGING_SUB="${TRAVIS_BUILD_DIR}/staging/${PROJECT_NAME}"
+# STAGING_SUB_INO="${STAGING_SUB}/${PROJECT_NAME}.ino"
+OUTPUT="${TRAVIS_BUILD_DIR}/output"
+
+# dates
+TIMESTAMP=$(date '+%s')
+DISTDATE=$(date '+%Y-%m-%d %H:%M')
+DATE_STR=$(date '+%y%m%d_%H%M')
+
+# check for marlin
+if [ ! -f "${SRC_MARLIN_INO}" ]; then
+	specho 1 "Marlin not found"
+	exit 1
+fi
+
+# #check for source
+# if [ ! -d "${SRC_COMMON}" ]; then
+# 	specho 1 "Source not found"
+# 	exit 1
+# fi
+
+# make staging build dir
+# mkdir -p "${STAGING_SUB}"
+
+# # copy marlin files
+# cp -Rf "${SRC_MARLIN}"/* "${STAGING_SUB}"/
+# # overwrite marlin files with source
+# cp -Rf "${SRC_COMMON}"/* "${STAGING_SUB}"/
+# # rename marlin ino in staging build
+# mv "${STAGING_SUB}/Marlin.ino" "${STAGING_SUB_INO}"
+
+# make output dir
+mkdir -p "${OUTPUT}"
+
+for (( i=0; i<=9; i++ )); do
+	SHORT_VARIANT=${SHORT_VARIANTS[${i}]}
+	MACHINE_NAME=${MACHINE_NAMES[${i}]}
+	VARIANT=${VARIANTS[${i}]}
+  UUID=${UUIDS[${i}]}
+
+	SHORT_BUILD_VERSION=$(echo "${SHORT_VARIANT}")
+	DETAILED_BUILD_VERSION=$(echo "${SHORT_BUILD_VERSION}_${DATE_STR}_HA")
+
+	# dynamic paths
+	BUILD_I="${TRAVIS_BUILD_DIR}/build_${i}"
+	BUILD_I_HEX="${BUILD_I}/${PROJECT_NAME}.ino.hex"
+	OUTPUT_HEX="${OUTPUT}/${SHORT_VARIANT}_mega.hex"
+
+	specho 2 "Building ${MACHINE_NAME} (${VARIANT})"
+	
+	# make build dir
+	mkdir -p "${BUILD_I}"
+	# set arduino build dir
+	eval "arduino --pref build.path=\"${BUILD_I}\" --board arduino:avr:mega:cpu=atmega2560 --save-prefs"
+	RET1=$?
+	if [ $RET1 -ne 0 ]; then
+		specho 1 "Arduino CLI error setting build preferences"
+		exit $RET1
+	fi
+
+	# _variant <dir> <variant>
+	_variant "${SRC_MARLIN}" "${VARIANT}"
+
+	# _version <dir> <timestamp> <distdate> <sbv> <dbv> <machine_name>
+	_version "${SRC_MARLIN}" "${TIMESTAMP}" "${DISTDATE}" "${SHORT_BUILD_VERSION}" "${DETAILED_BUILD_VERSION}" "${MACHINE_NAME}" "${UUID}"
+
+	# _version <dir> <filename> <variant> <date_str> <distdate>
+	# _marlin "${STAGING_SUB}" "${PROJECT_NAME}" "${VARIANT}" "${DATE_STR}" "${DISTDATE}"
+
+	# compile INO
+	eval "arduino --verify \"${SRC_MARLIN_INO}\""
+	RET2=$?
+	if [ $RET2 -ne 0 ]; then
+		specho 1 "Arduino CLI build failed"
+		exit $RET2
+	fi
+
+	# check for compiled hex
+	if [ -f "${BUILD_I_HEX}" ]; then
+		cp "${BUILD_I_HEX}" "${OUTPUT_HEX}"
+	fi
+done
+
+specho 2 "ls ${OUTPUT}"
+ls "${OUTPUT}"
+
+HEX_COUNT=$(find "${OUTPUT}"/ -maxdepth 1 -type f -name '*.hex' | wc -l)
+if [ $HEX_COUNT -eq 0 ]; then
+	specho 1 "Hex files not generated"
+	exit $HEX_COUNT
+fi
+
+specho 2 "Uploading to Hex repo"
+REPO="Julia2018MarlinHex"
+GH_REPO="github.com/FracktalWorks/${REPO}.git"
+# git clone -b 1.1.9 git://${GH_REPO}
+git clone -b master git://${GH_REPO}
+# rm -f "${REPO}"/*.hex
+# _info <dir> <distdate>
+_info "${REPO}" "${DISTDATE}"
+mv -f "${OUTPUT}"/* ${REPO}
+cd ${REPO}
+git remote
+git config user.email ${GITHUB_EMAIL}
+git config user.name ${GITHUB_USER}
+git add .
+git commit -m "${TRAVIS_COMMIT}:- ${DISTDATE}" -m "${TRAVIS_COMMIT_MESSAGE}"
+git push "https://${GITHUB_TOKEN}@${GH_REPO}" master # > /dev/null 2>&1
+
+
+specho 2 "Done!"
+
+# exit 0

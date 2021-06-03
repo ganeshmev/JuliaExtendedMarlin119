@@ -1,0 +1,110 @@
+#!/usr/bin/env bash
+# variant
+
+CWD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ROOT="${CWD}/.."
+SRC="${ROOT}/src"
+SRC_MARLIN="${SRC}/Marlin"
+SRC_MARLIN_INO="${SRC_MARLIN}/Marlin.ino"
+HEX_NAME_FILE="${ROOT}/HEX_NAME_FILE"
+
+PATH="${CWD}:${PATH}"
+
+# source constants
+. constants
+
+if [ -z "${TRAVIS}" ] 
+then
+  echo "Fracktal Works Marlin 1.1.9 Build Generator"
+  echo " "
+  echo " Parameters:"
+  for i in "${!MACHINE_NAMES[@]}"; do 
+    echo "  $(( $i )): ${MACHINE_NAMES[$i]}"
+  done
+	echo " "
+fi
+
+if [[ -f "${HEX_NAME_FILE}" ]]; then
+  rm -fv "${HEX_NAME_FILE}" &> /dev/null
+fi
+
+if [[ -z "$V_OPT" ]];	then
+	V_OPT=$1
+fi 
+
+if [[ -z "$V_OPT" ]];	then
+	exit 1
+fi
+
+if [[ $V_OPT -lt 0 || $V_OPT -gt 9 ]]; then
+	echo "Invalid parameters"
+	exit 1
+fi
+
+SHORT_VARIANT=${SHORT_VARIANTS[$V_OPT]}
+MACHINE_NAME=${MACHINE_NAMES[$V_OPT]}
+VARIANT=${VARIANTS[$V_OPT]}
+UUID=${UUIDS[$V_OPT]}
+
+echo "Selected variant: $V_OPT - ${MACHINE_NAME}"
+
+TIMESTAMP=$(date '+%s')
+DISTDATE=$(date '+%Y-%m-%d %H:%M')
+DATE_STR=$(date '+%y%m%d_%H%M')
+SHORT_BUILD_VERSION=$(echo "${SHORT_VARIANT}")
+DETAILED_BUILD_VERSION=$(echo "${SHORT_BUILD_VERSION}_${DATE_STR}_HA")
+
+# SRC_COMMON="${SRC}/common"
+
+# check for marlin
+if [ ! -f "${SRC_MARLIN_INO}" ]; then
+	echo "Marlin not found"
+	exit 1
+fi
+
+# #check for source
+# if [ ! -d "${SRC_COMMON}" ]; then
+# 	echo "Source not found"
+# 	exit 1
+# fi
+
+# Directories
+# STAGING_NAME="${DETAILED_BUILD_VERSION}"		# staging name
+
+# STAGING="${ROOT}/staging"
+# STAGING_BUILD="${STAGING}/${STAGING_NAME}"
+# STAGING_MARLIN_INO="${STAGING_BUILD}/Marlin.ino"
+# STAGING_BUILD_INO="${STAGING_BUILD}/${STAGING_NAME}.ino"
+# BUILD="${ROOT}/build"
+# OUTPUT="${ROOT}/output"
+
+
+# # clear staging directory
+# rm -rfv "${STAGING}"/* &> /dev/null
+# # make staging build dir
+# mkdir -p "${STAGING_BUILD}"
+
+# # copy marlin files
+# cp -Rf "${SRC_MARLIN}"/* "${STAGING_BUILD}"/
+# # overwrite marlin files with source
+# cp -Rf "${SRC_COMMON}"/* "${STAGING_BUILD}"/
+# # rename marlin ino in staging build
+# mv "${STAGING_MARLIN_INO}" "${STAGING_BUILD_INO}"
+
+# generate variant
+# ./scripts/header "${STAGING_BUILD}" "$V_OPT"
+
+# _variant <dir> <variant>
+_variant "${SRC_MARLIN}" "${VARIANT}"
+
+# _version <dir> <timestamp> <distdate> <sbv> <dbv> <machine_name>
+_version "${SRC_MARLIN}" "${TIMESTAMP}" "${DISTDATE}" "${SHORT_BUILD_VERSION}" "${DETAILED_BUILD_VERSION}" "${MACHINE_NAME}" "${UUID}"
+
+# # _version <dir> <filename> <variant> <date_str> <distdate>
+# _marlin "${SRC_MARLIN}" "Marlin" "${VARIANT}" "${DATE_STR}" "${DISTDATE}"
+
+# start cmd "/k node watcher.js ${STAGING_NAME}"
+
+cat > "${HEX_NAME_FILE}" <<EOF
+${DETAILED_BUILD_VERSION}
+EOF

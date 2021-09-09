@@ -150,7 +150,7 @@
 #if BV_PRO_ABL24()
   #define DEFAULT_AXIS_STEPS_PER_UNIT   { 100,  100, 503.937, 140 }
 #else
-  #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80,  80, 503.937, 140 }
+  #define DEFAULT_AXIS_STEPS_PER_UNIT   { 100,  100, 503.937, 140 }
 #endif
 #if BV_PRO() || BV_PRO_ABL() || BV_PRO_ABL24()
   #define DEFAULT_MAX_FEEDRATE          { 300, 300, 20, 45 }

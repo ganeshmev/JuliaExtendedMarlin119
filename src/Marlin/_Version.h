@@ -8,14 +8,14 @@
 #define REQUIRED_CONFIGURATION_ADV_H_VERSION 010109
 
 #define PROTOCOL_VERSION "1.0"
-#define MACHINE_NAME "Julia Extended WITH TMC"
-#define DEFAULT_MACHINE_UUID "8bea1474-710b-4b90-8a50-8237eaaec50f"
+#define MACHINE_NAME "Julia Extended with TMC 2208 on MKS GenL V2.1, Not using UART- Top right 2 jumpers jumped horizontally, 1/16 micro stepping"
+#define DEFAULT_MACHINE_UUID "0108a599-3b95-4186-a636-069eb59879c0"
 
-#define BUILD_UNIX_DATETIME "1631078824"
-#define STRING_DISTRIBUTION_DATE "2021-09-08 10:58"
+#define BUILD_UNIX_DATETIME "1646032316"
+#define STRING_DISTRIBUTION_DATE "2022-02-28 12:51"
 
-#define SHORT_BUILD_VERSION "J18RE"
-#define DETAILED_BUILD_VERSION "J18RE_26082021_1604"
+#define SHORT_BUILD_VERSION "JE20"
+#define DETAILED_BUILD_VERSION "JE20_220228_1251"
 
-#define SOURCE_CODE_URL "https://github.com/aharshac/FWJulia2018Marlin"
+#define SOURCE_CODE_URL "https://github.com/FracktalWorks/Julia2018Marlin119"
 #define WEBSITE_URL "https://fracktal.in"

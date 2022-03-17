@@ -9,7 +9,7 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -58,7 +58,7 @@
 #ifdef IS_RAMPS_13
   #define SERVO0_PIN        7 // RAMPS_13 // Will conflict with BTN_EN2 on LCD_I2C_VIKI
 #else
-  #define SERVO0_PIN       11
+  #define SERVO0_PIN       21///As of daughter board
 #endif
 #define SERVO1_PIN          6
 #define SERVO2_PIN          5
@@ -82,7 +82,7 @@
 // Z Probe (when not Z_MIN_PIN)
 //
 #ifndef Z_MIN_PROBE_PIN
- #define Z_MIN_PROBE_PIN  57  // 32
+ #define Z_MIN_PROBE_PIN  5//6//40 //57  // 32
 #endif
 
 //
@@ -122,6 +122,25 @@
 #ifndef E1_CS_PIN
   #define E1_CS_PIN        44
 #endif
+
+
+#define E2_STEP_PIN        36
+#define E2_DIR_PIN         34
+#define E2_ENABLE_PIN      30
+#ifndef E2_CS_PIN
+  #define E2_CS_PIN        44
+#endif
+
+
+#define E3_STEP_PIN        36
+#define E3_DIR_PIN         34
+#define E3_ENABLE_PIN      30
+#ifndef E3_CS_PIN
+  #define E3_CS_PIN        44
+#endif
+
+
+
 
 /**
  * Default pins for TMC software SPI
@@ -191,9 +210,12 @@
 //
 // Temperature Sensors
 //
-#define TEMP_0_PIN         13   // Analog Input
-#define TEMP_1_PIN         15   // Analog Input
-#define TEMP_BED_PIN       14   // Analog Input
+#define TEMP_0_PIN         13//4   // Analog Input// T0 thermistor pin
+//#define TEMP_1_PIN         13//3   // Analog Input// T1 thermistor pin
+//#define TEMP_2_PIN         13   // Analog Input
+//#define TEMP_3_PIN         15   // Analog Input
+#define TEMP_BED_PIN       14   // Analog Input// Bed thermistor pin
+
 
 // SPI for Max6675 or Max31855 Thermocouple
 #if DISABLED(SDSUPPORT)
@@ -257,6 +279,8 @@
 
   #else
     #define HEATER_1_PIN   MOSFET_D_PIN
+    #define HEATER_2_PIN   47
+    #define HEATER_3_PIN   45
   #endif
 #endif
 

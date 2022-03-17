@@ -787,10 +787,10 @@ void Temperature::manage_heater() {
     #if WATCH_HOTENDS
       // Make sure temperature is increasing
       if (watch_heater_next_ms[e] && ELAPSED(ms, watch_heater_next_ms[e])) { // Time to check this extruder?
-        if (degHotend(e) < watch_target_temp[e])                             // Failed to increase enough?
-          _temp_error(e, PSTR(MSG_T_HEATING_FAILED), TEMP_ERR_PSTR(MSG_HEATING_FAILED_LCD, e));
-        else                                                                 // Start again if the target is still far off
-          start_watching_heater(e);
+        //if (degHotend(e) < watch_target_temp[e])                             // Failed to increase enough?
+          //_temp_error(e, PSTR(MSG_T_HEATING_FAILED), TEMP_ERR_PSTR(MSG_HEATING_FAILED_LCD, e));
+        //else                                                                 // Start again if the target is still far off
+          //start_watching_heater(e);
       }
     #endif
 
@@ -827,10 +827,10 @@ void Temperature::manage_heater() {
     #if WATCH_THE_BED
       // Make sure temperature is increasing
       if (watch_bed_next_ms && ELAPSED(ms, watch_bed_next_ms)) {        // Time to check the bed?
-        if (degBed() < watch_target_bed_temp)                           // Failed to increase enough?
-          _temp_error(-1, PSTR(MSG_T_HEATING_FAILED), TEMP_ERR_PSTR(MSG_HEATING_FAILED_LCD, -1));
-        else                                                            // Start again if the target is still far off
-          start_watching_bed();
+        //if (degBed() < watch_target_bed_temp)                           // Failed to increase enough?
+          //_temp_error(-1, PSTR(MSG_T_HEATING_FAILED), TEMP_ERR_PSTR(MSG_HEATING_FAILED_LCD, -1));
+        //else                                                            // Start again if the target is still far off
+          //start_watching_bed();
       }
     #endif // WATCH_THE_BED
 

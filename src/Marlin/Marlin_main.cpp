@@ -9972,7 +9972,7 @@ inline void gcode_M226() {
         /* FRACKTAL WORKS: START */
         // FW_BABYSTEP
         const float offs = constrain(parser.value_axis_units(Z_AXIS), -2, 2);
-        #if (BV_PIX() || BV_PRO()) && HAS_LEVELING
+        #if (BV_PRO()) && HAS_LEVELING
           if (planner.leveling_active) {
             if (mbl.z_offset + offs > FW_BABYSTEP_LIMIT)
               mbl.z_offset = FW_BABYSTEP_LIMIT;

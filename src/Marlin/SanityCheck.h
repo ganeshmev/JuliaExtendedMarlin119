@@ -58,10 +58,10 @@
   #error "MOTHERBOARD is required. Please update your configuration."
 #elif !defined(X_BED_SIZE) || !defined(Y_BED_SIZE)
   #error "X_BED_SIZE and Y_BED_SIZE are now required! Please update your configuration."
-#elif WATCH_TEMP_PERIOD > 200//500
+#elif WATCH_TEMP_PERIOD > 500
   #error "WATCH_TEMP_PERIOD now uses seconds instead of milliseconds."
 #elif DISABLED(THERMAL_PROTECTION_HOTENDS) && (defined(WATCH_TEMP_PERIOD) || defined(THERMAL_PROTECTION_PERIOD))
-  //#error "Thermal Runaway Protection for hotends is now enabled with THERMAL_PROTECTION_HOTENDS."
+  #error "Thermal Runaway Protection for hotends is now enabled with THERMAL_PROTECTION_HOTENDS."
 #elif DISABLED(THERMAL_PROTECTION_BED) && defined(THERMAL_PROTECTION_BED_PERIOD)
   #error "Thermal Runaway Protection for the bed is now enabled with THERMAL_PROTECTION_BED."
 #elif (CORE_IS_XZ || CORE_IS_YZ) && ENABLED(Z_LATE_ENABLE)
@@ -569,8 +569,8 @@ static_assert(X_MAX_LENGTH >= X_BED_SIZE && Y_MAX_LENGTH >= Y_BED_SIZE,
     #error "SWITCHING_NOZZLE and DUAL_X_CARRIAGE are incompatible."
   #elif ENABLED(SINGLENOZZLE)
     #error "SWITCHING_NOZZLE and SINGLENOZZLE are incompatible."
-  //#elif EXTRUDERS != 2
-    //#error "SWITCHING_NOZZLE requires exactly 2 EXTRUDERS."
+  #elif EXTRUDERS != 2
+    #error "SWITCHING_NOZZLE requires exactly 2 EXTRUDERS."
   #elif NUM_SERVOS < 1
     #error "SWITCHING_NOZZLE requires NUM_SERVOS >= 1."
   #endif
@@ -1137,10 +1137,10 @@ static_assert(X_MAX_LENGTH >= X_BED_SIZE && Y_MAX_LENGTH >= Y_BED_SIZE,
     #elif TEMP_SENSOR_4 != 0
       #error "TEMP_SENSOR_4 shouldn't be set with only 3 HOTENDS."
     #endif
-  //#elif TEMP_SENSOR_2 != 0
-    //#error "TEMP_SENSOR_2 shouldn't be set with only 2 HOTENDS."
-  //#elif TEMP_SENSOR_3 != 0
-    //#error "TEMP_SENSOR_3 shouldn't be set with only 2 HOTENDS."
+  #elif TEMP_SENSOR_2 != 0
+    #error "TEMP_SENSOR_2 shouldn't be set with only 2 HOTENDS."
+  #elif TEMP_SENSOR_3 != 0
+    #error "TEMP_SENSOR_3 shouldn't be set with only 2 HOTENDS."
   #elif TEMP_SENSOR_4 != 0
     #error "TEMP_SENSOR_4 shouldn't be set with only 2 HOTENDS."
   #endif

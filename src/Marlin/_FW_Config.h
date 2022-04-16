@@ -129,7 +129,7 @@
 #define Z_HOME_DIR   1
 
 #if BV_REG() || BV(JULIA_2018_RPI_E)
-  #define MANUAL_X_HOME_POS 0
+  #define MANUAL_X_HOME_POS -5//0
   #define MANUAL_Y_HOME_POS Y_BED_SIZE 
   #define MANUAL_Z_HOME_POS Z_MAX_POS
 #elif BV_PRO_SINGLE()
